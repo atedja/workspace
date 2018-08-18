@@ -1,0 +1,31 @@
+[alias]
+	st = status
+	cm = commit
+	df = diff
+	cma = commit -a
+	pl = pull
+	plr = pull -r
+	lg = log
+	lgs = log -10
+	br = branch -vv
+	bra = branch -vva
+	rmb = push origin --delete
+	co = checkout
+	sh = show
+	lgbr = log --graph --all --decorate
+	ignore = update-index --assume-unchanged
+	unignore = update-index --no-assume-unchanged
+	dfs = diff --cached
+	uncommit = reset --soft HEAD^
+	unstage = reset HEAD
+	sum = log --oneline
+	gov = go-vendor
+[user]
+	name = Albert Tedja
+	email = albert@siliconaxon.com
+[color]
+	ui = true
+[push]
+	default = simple
+[core]
+	editor = vim
