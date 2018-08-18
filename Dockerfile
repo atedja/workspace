@@ -3,8 +3,9 @@ MAINTAINER albert@siliconaxon.com
 
 # Install core utils and libs.
 RUN apt update
-RUN apt install -y curl \
+RUN apt install -y \
   build-essential \
+  curl \
   dnsutils \
   git \
   man \
