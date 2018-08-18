@@ -1,0 +1,31 @@
+version: '3'
+services:
+  pg:
+    container_name: pg
+    image: postgres:10.5-alpine
+    networks:
+      - home
+    ports:
+      - "127.0.0.1:5432:5432"
+    restart: always
+  redis:
+    container_name: redis
+    image: redis:4.0.11-alpine3.8
+    networks:
+      - home
+    ports:
+      - "127.0.0.1:6379:6379"
+    restart: always
+  es:
+    container_name: es
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
+    networks:
+      - home
+    ports:
+      - "127.0.0.1:9200:9200"
+      - "127.0.0.1:9300:9300"
+    restart: always
+
+networks:
+  home:
+    driver: bridge
