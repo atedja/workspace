@@ -60,7 +60,6 @@ ENV PATH=${PATH}:/usr/local/go/bin
 # Install OpenVPN
 RUN apt install -y openvpn
 
-
 # Cleanup Installation
 RUN apt autoclean && apt autoremove
 RUN rm -rf /${SETUP_DIR}
@@ -71,6 +70,7 @@ ADD usr /usr
 # Set up the home folder
 ENV HOME /root
 ADD home $HOME
+ADD .ssh $HOME/.ssh
 RUN mkdir -p $HOME/.vim/autoload $HOME/.vim/bundle
 RUN curl -LSso $HOME/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
 WORKDIR $HOME
