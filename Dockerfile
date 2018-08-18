@@ -61,10 +61,6 @@ ENV PATH=${PATH}:/usr/local/go/bin
 # Install OpenVPN
 RUN apt install -y openvpn
 
-# Cleanup Installation
-RUN apt autoclean && apt autoremove
-RUN rm -rf /${SETUP_DIR}
-
 # Copy custom binaries and configurations
 ADD usr /usr
 
@@ -72,12 +68,21 @@ ADD usr /usr
 ENV HOME /root
 ADD home $HOME
 ADD .ssh $HOME/.ssh
-RUN mkdir -p $HOME/.vim/autoload $HOME/.vim/bundle
-RUN curl -LSso $HOME/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
-WORKDIR $HOME
 
-# Install RVM (this is after setting up the home folder because RVM changes .bashrc)
+# Install RVM (this must be after setting up the home folder because RVM changes .bashrc)
 RUN echo 'export rvm_prefix="$HOME"' > $HOME/.rvmrc
 RUN echo 'export rvm_path="$HOME/.rvm"' >> $HOME/.rvmrc
 RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 RUN \curl -sSL https://get.rvm.io | bash -s stable --ruby
+
+# Vim and plugins
+RUN mkdir -p $HOME/.vim/autoload $HOME/.vim/bundle
+RUN curl -LSso $HOME/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+RUN git clone https://github.com/fatih/vim-go.git ~/.vim/bundle/vim-go
+RUN git clone git://github.com/altercation/vim-colors-solarized.git ~/.vim/bundle/vim-colors-solarized
+
+# Cleanup Installation
+RUN apt autoclean && apt autoremove
+RUN rm -rf /${SETUP_DIR}
+
+WORKDIR $HOME
