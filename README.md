@@ -1,6 +1,6 @@
-# workstation
+# workspace
 
-Moving my workstation into Docker.
+My workspace in Docker.
 
 ### Building
 
