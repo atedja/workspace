@@ -90,6 +90,22 @@ RUN apt install -y php${PHP_VERSION}
 RUN \curl -sSL https://getcomposer.org/download/${PHP_COMPOSER_VERSION}/composer.phar -o /usr/local/bin/composer.phar
 RUN chmod +x /usr/local/bin/composer.phar
 
+# Install Docker
+RUN apt install -y apt-transport-https \
+     ca-certificates \
+     curl \
+     gnupg2 \
+     software-properties-common
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+RUN apt update
+RUN apt install -y docker-ce
+
+# Install Docker Compose
+ENV DOCKER_COMPOSE_VERSION 1.22.0
+RUN curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+RUN chmod +x /usr/local/bin/docker-compose
+
 # Cleanup Installation
 RUN apt autoclean && apt autoremove
 RUN rm -rf /${SETUP_DIR}
