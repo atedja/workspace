@@ -26,9 +26,10 @@ RUN mkdir -p /${SETUP_DIR}
 WORKDIR /${SETUP_DIR}
 
 # Install Python and pip
-RUN apt install -y python python3
+RUN apt install -y python python3 python3-pip
 RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 RUN python get-pip.py
+RUN pip3 install virtualenv
 
 # Install vim
 RUN apt install -y vim
@@ -80,6 +81,14 @@ RUN mkdir -p $HOME/.vim/autoload $HOME/.vim/bundle
 RUN curl -LSso $HOME/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
 RUN git clone https://github.com/fatih/vim-go.git ~/.vim/bundle/vim-go
 RUN git clone git://github.com/altercation/vim-colors-solarized.git ~/.vim/bundle/vim-colors-solarized
+
+# PHP
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PHP_VERSION 7.2
+ENV PHP_COMPOSER_VERSION 1.7.2
+RUN apt install -y php${PHP_VERSION}
+RUN \curl -sSL https://getcomposer.org/download/${PHP_COMPOSER_VERSION}/composer.phar -o /usr/local/bin/composer.phar
+RUN chmod +x /usr/local/bin/composer.phar
 
 # Cleanup Installation
 RUN apt autoclean && apt autoremove
