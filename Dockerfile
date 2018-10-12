@@ -106,6 +106,9 @@ ENV DOCKER_COMPOSE_VERSION 1.22.0
 RUN curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 RUN chmod +x /usr/local/bin/docker-compose
 
+# Additional libraries
+RUN apt install -y jq
+
 # Cleanup Installation
 RUN apt autoclean && apt autoremove
 RUN rm -rf /${SETUP_DIR}
