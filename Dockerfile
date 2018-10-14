@@ -31,9 +31,6 @@ RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 RUN python get-pip.py
 RUN pip3 install virtualenv
 
-# Install vim
-RUN apt install -y vim
-
 # Install redis-cli
 RUN apt install -y redis-tools
 
@@ -59,8 +56,16 @@ RUN curl https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz -o golang.t
 RUN tar -C /usr/local -xzf golang.tar.gz
 ENV PATH=${PATH}:/usr/local/go/bin
 
-# Install OpenVPN
-RUN apt install -y openvpn
+# Install Docker
+RUN apt install -y apt-transport-https \
+     ca-certificates \
+     curl \
+     gnupg2 \
+     software-properties-common
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+RUN apt update
+RUN apt install -y docker-ce
 
 # Copy custom binaries and configurations
 ADD usr /usr
@@ -73,10 +78,11 @@ ADD .ssh $HOME/.ssh
 # Install RVM (this must be after setting up the home folder because RVM changes .bashrc)
 RUN echo 'export rvm_prefix="$HOME"' > $HOME/.rvmrc
 RUN echo 'export rvm_path="$HOME/.rvm"' >> $HOME/.rvmrc
-RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
-RUN \curl -sSL https://get.rvm.io | bash -s stable --ruby
+RUN gpg2 --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+RUN curl -sSL https://get.rvm.io | bash -s stable --ruby
 
 # Vim and plugins
+RUN apt install -y vim
 RUN mkdir -p $HOME/.vim/autoload $HOME/.vim/bundle
 RUN curl -LSso $HOME/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
 RUN git clone https://github.com/fatih/vim-go.git ~/.vim/bundle/vim-go
@@ -87,29 +93,18 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV PHP_VERSION 7.2
 ENV PHP_COMPOSER_VERSION 1.7.2
 RUN apt install -y php${PHP_VERSION}
-RUN \curl -sSL https://getcomposer.org/download/${PHP_COMPOSER_VERSION}/composer.phar -o /usr/local/bin/composer.phar
+RUN curl -sSL https://getcomposer.org/download/${PHP_COMPOSER_VERSION}/composer.phar -o /usr/local/bin/composer.phar
 RUN chmod +x /usr/local/bin/composer.phar
-
-# Install Docker
-RUN apt install -y apt-transport-https \
-     ca-certificates \
-     curl \
-     gnupg2 \
-     software-properties-common
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
-RUN apt update
-RUN apt install -y docker-ce
-
-# Install AWS Vault
-ENV AWS_VAULT_VERSION v4.4.1
-RUN curl -fsSL "https://github.com/99designs/aws-vault/releases/download/${AWS_VAULT_VERSION}/aws-vault-linux-amd64" -o /usr/local/bin/aws-vault
-RUN chmod +x /usr/local/bin/aws-vault
 
 # Install Docker Compose
 ENV DOCKER_COMPOSE_VERSION 1.22.0
 RUN curl -fsSL "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 RUN chmod +x /usr/local/bin/docker-compose
+
+# Install AWS Vault
+ENV AWS_VAULT_VERSION v4.4.1
+RUN curl -fsSL "https://github.com/99designs/aws-vault/releases/download/${AWS_VAULT_VERSION}/aws-vault-linux-amd64" -o /usr/local/bin/aws-vault
+RUN chmod +x /usr/local/bin/aws-vault
 
 # Additional libraries
 RUN apt install -y jq
