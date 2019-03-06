@@ -8,6 +8,7 @@ RUN apt install -y \
   curl \
   dnsutils \
   git \
+  jq \
   man \
   mc \
   netcat-openbsd \
@@ -37,21 +38,16 @@ RUN apt install -y redis-tools
 # Install postgres-client
 RUN apt install -y postgresql-client
 
-# Install Terraform
-ENV TERRAFORM_VERSION 0.11.8
-RUN curl https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -o terraform.zip
-RUN unzip terraform.zip -d /usr/bin/ && rm terraform.zip
-
 # Install Ansible
-ENV ANSIBLE_VERSION 2.6.2
+ENV ANSIBLE_VERSION 2.7
 RUN pip install ansible==${ANSIBLE_VERSION}
 
 # Install AWS CLI
-ENV AWS_CLI_VERSION 1.15.62
+ENV AWS_CLI_VERSION 1.16.118
 RUN pip install awscli==${AWS_CLI_VERSION}
 
 # Install go
-ENV GO_VERSION 1.10.3
+ENV GO_VERSION 1.12
 RUN curl https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz -o golang.tar.gz
 RUN tar -C /usr/local -xzf golang.tar.gz
 ENV PATH=${PATH}:/usr/local/go/bin
@@ -78,7 +74,7 @@ ADD .ssh $HOME/.ssh
 # Install RVM (this must be after setting up the home folder because RVM changes .bashrc)
 RUN echo 'export rvm_prefix="$HOME"' > $HOME/.rvmrc
 RUN echo 'export rvm_path="$HOME/.rvm"' >> $HOME/.rvmrc
-RUN gpg2 --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+RUN gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 RUN curl -sSL https://get.rvm.io | bash -s stable --ruby
 
 # Vim and plugins
@@ -91,23 +87,20 @@ RUN git clone git://github.com/altercation/vim-colors-solarized.git ~/.vim/bundl
 # PHP
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PHP_VERSION 7.2
-ENV PHP_COMPOSER_VERSION 1.7.2
+ENV PHP_COMPOSER_VERSION 1.8.4
 RUN apt install -y php${PHP_VERSION}
 RUN curl -sSL https://getcomposer.org/download/${PHP_COMPOSER_VERSION}/composer.phar -o /usr/local/bin/composer.phar
 RUN chmod +x /usr/local/bin/composer.phar
 
 # Install Docker Compose
-ENV DOCKER_COMPOSE_VERSION 1.22.0
+ENV DOCKER_COMPOSE_VERSION 1.23.2
 RUN curl -fsSL "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 RUN chmod +x /usr/local/bin/docker-compose
 
 # Install AWS Vault
-ENV AWS_VAULT_VERSION v4.4.1
+ENV AWS_VAULT_VERSION v4.5.1
 RUN curl -fsSL "https://github.com/99designs/aws-vault/releases/download/${AWS_VAULT_VERSION}/aws-vault-linux-amd64" -o /usr/local/bin/aws-vault
 RUN chmod +x /usr/local/bin/aws-vault
-
-# Additional libraries
-RUN apt install -y jq
 
 # Cleanup Installation
 RUN apt autoclean && apt autoremove
