@@ -3,6 +3,7 @@ MAINTAINER albert@siliconaxon.com
 
 # Install core utils and libs.
 RUN apt update
+RUN apt upgrade
 RUN apt install -y \
   build-essential \
   curl \
@@ -27,9 +28,7 @@ RUN mkdir -p /${SETUP_DIR}
 WORKDIR /${SETUP_DIR}
 
 # Install Python and pip
-RUN apt install -y python python3 python3-pip
-RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-RUN python get-pip.py
+RUN apt install -y python python-pip python3 python3-pip
 RUN pip3 install virtualenv
 
 # Install redis-cli
@@ -70,12 +69,6 @@ ADD usr /usr
 ENV HOME /root
 ADD home $HOME
 ADD .ssh $HOME/.ssh
-
-# Install RVM (this must be after setting up the home folder because RVM changes .bashrc)
-RUN echo 'export rvm_prefix="$HOME"' > $HOME/.rvmrc
-RUN echo 'export rvm_path="$HOME/.rvm"' >> $HOME/.rvmrc
-RUN gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
-RUN curl -sSL https://get.rvm.io | bash -s stable --ruby
 
 # Vim and plugins
 RUN apt install -y vim
