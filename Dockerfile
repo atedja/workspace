@@ -3,7 +3,7 @@ MAINTAINER albert@siliconaxon.com
 
 # Install core utils and libs.
 RUN apt update
-RUN apt upgrade
+RUN apt upgrade -y
 RUN apt install -y \
   build-essential \
   curl \
@@ -39,7 +39,7 @@ RUN apt install -y postgresql-client
 
 # Install Ansible
 ENV ANSIBLE_VERSION 2.7
-RUN pip install ansible==${ANSIBLE_VERSION}
+RUN pip3 install ansible==${ANSIBLE_VERSION}
 
 # Install AWS CLI
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -82,6 +82,8 @@ RUN git clone git://github.com/altercation/vim-colors-solarized.git ~/.vim/bundl
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PHP_VERSION 7.4
 ENV PHP_COMPOSER_VERSION 1.9.3
+RUN add-apt-repository ppa:ondrej/php
+RUN apt update
 RUN apt install -y php${PHP_VERSION}
 RUN curl -sSL https://getcomposer.org/download/${PHP_COMPOSER_VERSION}/composer.phar -o /usr/local/bin/composer.phar
 RUN chmod +x /usr/local/bin/composer.phar
