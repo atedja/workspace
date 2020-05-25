@@ -98,6 +98,12 @@ ENV AWS_VAULT_VERSION v5.3.2
 RUN curl -fsSL "https://github.com/99designs/aws-vault/releases/download/${AWS_VAULT_VERSION}/aws-vault-linux-amd64" -o /usr/local/bin/aws-vault
 RUN chmod +x /usr/local/bin/aws-vault
 
+# Set up locales
+RUN apt install locales
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US
+
 # Cleanup Installation
 RUN apt autoclean && apt autoremove
 RUN rm -rf /${SETUP_DIR}
