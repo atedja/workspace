@@ -37,7 +37,7 @@ RUN apt install -y manpages-dev g++ valgrind
 # Install Python and pip
 RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt update
-RUN apt install -y python3.11 python3.11-dev python3.11-venv
+RUN apt install -y python3-dev python3-venv python3-pip
 
 # Set up temporary folders for installation
 ENV SETUP_DIR setup
