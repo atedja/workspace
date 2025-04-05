@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 MAINTAINER albert@siliconaxon.com
 
 # Install core utils and libs.
@@ -45,7 +45,7 @@ RUN mkdir -p /${SETUP_DIR}
 WORKDIR /${SETUP_DIR}
 
 # Install go
-ENV GO_VERSION 1.17.7
+ENV GO_VERSION 1.24.2
 RUN curl https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz -o golang.tar.gz
 RUN tar -C /usr/local -xzf golang.tar.gz
 ENV PATH=${PATH}:/usr/local/go/bin
@@ -72,7 +72,9 @@ ENV HOME /root
 RUN mkdir -p $HOME/.vim/autoload $HOME/.vim/bundle
 RUN curl -LSso $HOME/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
 RUN git clone https://github.com/fatih/vim-go.git ~/.vim/bundle/vim-go
-RUN git clone git://github.com/altercation/vim-colors-solarized.git ~/.vim/bundle/vim-colors-solarized
+RUN git clone https://github.com/altercation/vim-colors-solarized.git ~/.vim/bundle/vim-colors-solarized
+RUN git clone https://github.com/leafgarland/typescript-vim.git ~/.vim/bundle/typescript-vim
+RUN git clone https://github.com/godlygeek/tabular.git ~/.vim/bundle/tabular
 
 # Install Docker Compose
 ENV DOCKER_COMPOSE_VERSION 1.29.2

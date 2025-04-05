@@ -197,3 +197,5 @@ vnoremap <leader>r< <esc>`>a><esc>`<i<<esc>
 vnoremap <leader>r( <esc>`>a)<esc>`<i(<esc>
 vnoremap <leader>r{ <esc>`>a}<esc>`<i{<esc>
 vnoremap <leader>r[ <esc>`>a]<esc>`<i[<esc>
+
+:command FormatCsv %!column -t -s ','
