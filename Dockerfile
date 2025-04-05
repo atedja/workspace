@@ -1,5 +1,5 @@
 FROM ubuntu:24.04
-MAINTAINER albert@siliconaxon.com
+LABEL org.opencontainers.image.authors="albert@siliconaxon.com"
 
 # Install core utils and libs.
 ENV DEBIAN_FRONTEND="noninteractive"
@@ -40,12 +40,12 @@ RUN apt update
 RUN apt install -y python3-dev python3-venv python3-pip
 
 # Set up temporary folders for installation
-ENV SETUP_DIR setup
+ENV SETUP_DIR=setup
 RUN mkdir -p /${SETUP_DIR}
 WORKDIR /${SETUP_DIR}
 
 # Install go
-ENV GO_VERSION 1.24.2
+ENV GO_VERSION=1.24.2
 RUN curl https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz -o golang.tar.gz
 RUN tar -C /usr/local -xzf golang.tar.gz
 ENV PATH=${PATH}:/usr/local/go/bin
@@ -66,7 +66,7 @@ RUN ./aws/install
 ADD usr /usr
 
 # Set up the home folder
-ENV HOME /root
+ENV HOME=/root
 
 # Vim and plugins
 RUN mkdir -p $HOME/.vim/autoload $HOME/.vim/bundle
@@ -77,18 +77,18 @@ RUN git clone https://github.com/leafgarland/typescript-vim.git ~/.vim/bundle/ty
 RUN git clone https://github.com/godlygeek/tabular.git ~/.vim/bundle/tabular
 
 # Install Docker Compose
-ENV DOCKER_COMPOSE_VERSION 1.29.2
+ENV DOCKER_COMPOSE_VERSION=1.29.2
 RUN curl -fsSL "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 RUN chmod +x /usr/local/bin/docker-compose
 
 # Install AWS Vault
-ENV AWS_VAULT_VERSION v6.5.0
+ENV AWS_VAULT_VERSION=v6.5.0
 RUN curl -fsSL "https://github.com/99designs/aws-vault/releases/download/${AWS_VAULT_VERSION}/aws-vault-linux-amd64" -o /usr/local/bin/aws-vault
 RUN chmod +x /usr/local/bin/aws-vault
 
 # Set up locales
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
 
 # Cleanup Installation
 RUN apt autoclean && apt autoremove
